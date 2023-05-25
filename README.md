@@ -8,7 +8,7 @@ a [Snowflake](https://github.com/twitter-archive/snowflake) based unique ID gene
 Work in progress.
 
 - [x] BaseGenerator(DefaultGenerator)
-- [] CachedGenerator
+- [ ] CachedGenerator
 
 Welcome to open issues or pull requests to help me complete this project.
 
