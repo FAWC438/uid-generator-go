@@ -76,7 +76,7 @@ func (c *BaseGenerator) getCurrentMillisecond() (uint64, error) {
 	}
 	currentMillisecond := uint64(time.Now().UnixMilli())
 	if currentMillisecond-c.epochMilliSeconds > c.bitsAllocator.MaxDeltaMilliSeconds {
-		return 0, &util.UidGeneratorError{msg: "Timestamp bits is exhausted. Refusing UID generate. Now: " +
+		return 0, &util.UidGeneratorError{Msg: "Timestamp bits is exhausted. Refusing UID generate. Now: " +
 			strconv.FormatUint(currentMillisecond, 10) + ", epochSecond: " + strconv.FormatUint(c.epochMilliSeconds, 10)}
 	}
 	return currentMillisecond, nil
@@ -110,7 +110,7 @@ func (c *BaseGenerator) nextID() (uint64, error) {
 		return 0, e
 	}
 	if currentMilliSecond < c.lastMilliSecond {
-		return 0, &util.UidGeneratorError{msg: "Clock moved backwards. Refusing for " + strconv.FormatUint(c.lastMilliSecond-currentMilliSecond, 10) + " seconds"}
+		return 0, &util.UidGeneratorError{Msg: "Clock moved backwards. Refusing for " + strconv.FormatUint(c.lastMilliSecond-currentMilliSecond, 10) + " seconds"}
 	}
 
 	if currentMilliSecond == c.lastMilliSecond {
@@ -132,8 +132,8 @@ func (c *BaseGenerator) SetWorkID(newWorkID uint64) error {
 	if !c.IsConstructed {
 		panic("BaseGenerator is not constructed")
 	}
-	if newWorkID < 0 || newWorkID >= 1<<c.bitsAllocator.WorkerIdBits {
-		return &util.UidGeneratorError{msg: "Set WorkID error"}
+	if newWorkID >= 1<<c.bitsAllocator.WorkerIdBits {
+		return &util.UidGeneratorError{Msg: "Set WorkID error"}
 	}
 	c.workID = newWorkID
 	return nil
@@ -145,7 +145,7 @@ func (c *BaseGenerator) SetEpochStr(newEpochStr string) error {
 	}
 	t, e := time.Parse("2006-01-02", newEpochStr)
 	if e != nil {
-		return &util.UidGeneratorError{msg: "Set epochStr error"}
+		return &util.UidGeneratorError{Msg: "Set epochStr error"}
 	}
 	c.epochStr = newEpochStr
 	c.epochMilliSeconds = uint64(t.UnixMilli())
@@ -157,7 +157,7 @@ func (c *BaseGenerator) SetTimeBits(newTimeBits int32) error {
 		panic("BaseGenerator is not constructed")
 	}
 	if newTimeBits < 0 || newTimeBits >= 64 {
-		return &util.UidGeneratorError{msg: "Set timeBits error"}
+		return &util.UidGeneratorError{Msg: "Set timeBits error"}
 	}
 	c.timeBits = newTimeBits
 	c.bitsAllocator = BitsAllocatorConstructor(c.timeBits, c.workerBits, c.seqBits)
@@ -169,7 +169,7 @@ func (c *BaseGenerator) SetWorkerBits(newWorkerBits int32) error {
 		panic("BaseGenerator is not constructed")
 	}
 	if newWorkerBits < 0 || newWorkerBits >= 64 {
-		return &util.UidGeneratorError{msg: "Set workerBits error"}
+		return &util.UidGeneratorError{Msg: "Set workerBits error"}
 	}
 	c.workerBits = newWorkerBits
 	c.bitsAllocator = BitsAllocatorConstructor(c.timeBits, c.workerBits, c.seqBits)
@@ -181,7 +181,7 @@ func (c *BaseGenerator) SetSeqBits(newSeqBits int32) error {
 		panic("BaseGenerator is not constructed")
 	}
 	if newSeqBits < 0 || newSeqBits >= 64 {
-		return &util.UidGeneratorError{msg: "Set seqBits error"}
+		return &util.UidGeneratorError{Msg: "Set seqBits error"}
 	}
 	c.seqBits = newSeqBits
 	c.bitsAllocator = BitsAllocatorConstructor(c.timeBits, c.workerBits, c.seqBits)

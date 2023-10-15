@@ -41,6 +41,9 @@ func NewRingBuffer(bufferSize int32, paddingFactor int32) *RingBuffer {
 	ringBuffer.indexMask = int64(bufferSize - 1)
 	ringBuffer.slots = make([]int64, bufferSize)
 	ringBuffer.flags = make([]util.PaddedAtomicLong, bufferSize)
+	for i := int32(0); i < bufferSize; i++ {
+		ringBuffer.flags[i] = *util.NewPaddedAtomicLong(enablePutFlag)
+	}
 	ringBuffer.paddingThreshold = bufferSize * paddingFactor / 100
 	ringBuffer.lock = sync.Mutex{}
 
